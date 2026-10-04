@@ -146,6 +146,6 @@ Object.keys(categories).forEach(k=>{let o=document.createElement("option");o.val
 let deferredPrompt=null;window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredPrompt=e;document.getElementById("installBar").style.display="block"});document.getElementById("installBtn").onclick=async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();deferredPrompt=null;document.getElementById("installBar").style.display="none"};
 if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("service-worker.js").catch(()=>{}));
 document.addEventListener("DOMContentLoaded",loadData);
-</script>
+</script><!-- GitHub Pages deployment refresh -->
 </body>
 </html>
