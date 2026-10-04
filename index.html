@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#2563eb">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Pengurus Bajet">
+<link rel="manifest" href="manifest.json">
+<title>Pengurus Bajet Saya</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}
+body{background:#f2f5f9;color:#172033;padding-bottom:30px}
+.header{background:linear-gradient(135deg,#111827,#2563eb);color:white;padding:22px 16px;text-align:center}
+.header h1{font-size:24px;margin-bottom:5px}.header p{font-size:13px;opacity:.85}
+.nav{display:flex;background:#fff;position:sticky;top:0;z-index:10;box-shadow:0 2px 10px #00000012}
+.nav button{flex:1;border:0;background:#fff;padding:14px 5px;font-size:12px;font-weight:700;color:#64748b}
+.nav button.active{color:#2563eb;border-bottom:3px solid #2563eb}
+.container{max-width:700px;margin:auto;padding:15px}.page{display:none}.page.active{display:block}
+.card,.summary-box{background:#fff;border-radius:16px;padding:18px;margin-bottom:15px;box-shadow:0 3px 14px #0f172a12}
+.card h2{font-size:18px;margin-bottom:15px}
+label{display:block;font-size:13px;font-weight:700;margin:10px 0 6px;color:#475569}
+input,select{width:100%;padding:13px;border:1px solid #dbe2ea;border-radius:10px;font-size:15px;background:#fff;outline:none}
+input:focus,select:focus{border-color:#2563eb}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+button.primary{width:100%;border:0;border-radius:11px;padding:14px;margin-top:12px;background:#2563eb;color:#fff;font-weight:800;font-size:15px}
+button.green{background:#16a34a}button.red{background:#dc2626}button.gray{background:#64748b}
+.summary{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:15px}
+.summary-box{margin-bottom:0}.summary-box small{color:#64748b;font-size:12px}.summary-box strong{display:block;margin-top:5px;font-size:20px}
+.blue strong{color:#2563eb}.green-text strong{color:#16a34a}.red-text strong{color:#dc2626}.orange strong{color:#ea580c}
+.balance{background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;border-radius:16px;padding:20px;margin-bottom:15px}
+.balance small{opacity:.85}.balance strong{display:block;font-size:30px;margin-top:5px}
+.progress{width:100%;height:10px;background:#e2e8f0;border-radius:20px;overflow:hidden}.progress-bar{height:100%;width:0;background:#2563eb}
+.alert{padding:12px;border-radius:10px;margin-top:10px;font-size:13px;font-weight:700}.alert.warning{background:#fff7ed;color:#c2410c}.alert.danger{background:#fef2f2;color:#b91c1c}.alert.success{background:#f0fdf4;color:#15803d}
+.budget-item{margin-bottom:16px}.budget-head{display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px}.budget-bar{height:9px;background:#e5e7eb;border-radius:20px;overflow:hidden}.budget-fill{height:100%;background:#2563eb}.budget-fill.warning{background:#f59e0b}.budget-fill.danger{background:#dc2626}
+.expense{border:1px solid #e5e7eb;border-radius:12px;padding:13px;margin-bottom:9px}.expense-top{display:flex;justify-content:space-between;gap:10px}.expense-name{font-weight:800;font-size:14px}.expense-date{color:#64748b;font-size:11px;margin-top:4px}.expense-amount{font-weight:900;color:#dc2626;white-space:nowrap}
+.expense-actions{display:flex;gap:7px;margin-top:9px}.expense-actions button{border:0;border-radius:7px;padding:7px 10px;font-size:11px;font-weight:700}.edit-btn{background:#eff6ff;color:#2563eb}.delete-btn{background:#fef2f2;color:#dc2626}
+.category-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid #eef2f7}.category-left{font-size:13px;font-weight:700}.category-total{font-weight:800;color:#dc2626}
+.chart{display:flex;align-items:flex-end;gap:8px;height:220px;padding:15px 5px 0;border-bottom:1px solid #cbd5e1;overflow-x:auto}.chart-item{min-width:38px;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center}.chart-value{font-size:9px;color:#475569;margin-bottom:4px;white-space:nowrap}.chart-bar{width:25px;background:#2563eb;border-radius:6px 6px 0 0;min-height:2px}.chart-label{font-size:9px;color:#64748b;margin-top:6px}
+.empty{text-align:center;padding:25px;color:#94a3b8;font-size:13px}.footer{text-align:center;color:#94a3b8;font-size:11px;margin-top:20px}
+.modal{display:none;position:fixed;inset:0;background:#0008;z-index:100;padding:20px}.modal.show{display:flex;align-items:center;justify-content:center}.modal-box{background:#fff;border-radius:18px;padding:20px;width:100%;max-width:450px}.close{background:#64748b;color:#fff;border:0;width:100%;padding:13px;border-radius:10px;margin-top:8px;font-weight:800}
+.install{display:none;background:#eff6ff;color:#1d4ed8;padding:10px 12px;font-size:12px;font-weight:700;text-align:center}.install button{border:0;background:#2563eb;color:white;border-radius:8px;padding:7px 10px;margin-left:8px;font-weight:800}
+@media(max-width:480px){.summary-box strong{font-size:17px}.grid{grid-template-columns:1fr}.nav button{font-size:11px}}
+</style>
+</head>
+<body>
+<div class="header"><h1>💰 Pengurus Bajet Saya</h1><p>Urus gaji, komitmen dan perbelanjaan</p></div>
+<div id="installBar" class="install">📱 Pasang sebagai app <button id="installBtn">Pasang</button></div>
+<div class="nav">
+<button id="nav1" class="active" onclick="showPage(1)">📊<br>Komitmen</button>
+<button id="nav2" onclick="showPage(2)">🛒<br>Belanja</button>
+<button id="nav3" onclick="showPage(3)">📈<br>Laporan</button>
+</div>
+<div class="container">
+
+<div id="page1" class="page active">
+<div class="summary">
+<div class="summary-box blue"><small>💰 Gaji</small><strong id="topSalary">RM0.00</strong></div>
+<div class="summary-box red-text"><small>📌 Komitmen</small><strong id="topCommitment">RM0.00</strong></div>
+<div class="summary-box orange"><small>🛒 Belanja</small><strong id="topExpenses">RM0.00</strong></div>
+<div class="summary-box green-text"><small>💵 Baki</small><strong id="topBalance">RM0.00</strong></div>
+</div>
+<div class="card"><h2>💰 Pendapatan Bulanan</h2><label>Gaji Bersih (RM)</label><input id="salary" type="number" min="0" step=".01" oninput="calculate()"></div>
+<div class="card"><h2>📌 Komitmen Bulanan</h2><div class="grid">
+<div><label>🚗 Kereta</label><input id="car" type="number" min="0" step=".01" oninput="calculate()"></div>
+<div><label>💧 Bil Air</label><input id="water" type="number" min="0" step=".01" oninput="calculate()"></div>
+<div><label>⚡ Bil Elektrik</label><input id="electric" type="number" min="0" step=".01" oninput="calculate()"></div>
+<div><label>📱 Telefon</label><input id="phone" type="number" min="0" step=".01" oninput="calculate()"></div>
+<div><label>🌐 WiFi</label><input id="wifi" type="number" min="0" step=".01" oninput="calculate()"></div>
+<div><label>🏦 Loan</label><input id="loan" type="number" min="0" step=".01" oninput="calculate()"></div>
+<div><label>📦 Lain-lain</label><input id="otherCommit" type="number" min="0" step=".01" oninput="calculate()"></div>
+</div><div class="balance"><small>Baki selepas komitmen</small><strong id="afterCommit">RM0.00</strong></div><button class="primary green" onclick="saveBudget()">💾 Simpan Bajet</button></div>
+<div class="card"><h2>🎯 Bajet Mengikut Kategori</h2><p style="font-size:12px;color:#64748b">Tetapkan had bulanan untuk dapatkan amaran.</p><div class="grid">
+<div><label>🍳 Makan Pagi</label><input id="budgetBreakfast" type="number" min="0"></div><div><label>🍛 Tengahari</label><input id="budgetLunch" type="number" min="0"></div>
+<div><label>🍽️ Makan Malam</label><input id="budgetDinner" type="number" min="0"></div><div><label>☕ Minum</label><input id="budgetDrink" type="number" min="0"></div>
+<div><label>🛒 Kedai</label><input id="budgetShop" type="number" min="0"></div><div><label>⛽ Petrol</label><input id="budgetPetrol" type="number" min="0"></div>
+<div><label>🅿️ Parking / Tol</label><input id="budgetParking" type="number" min="0"></div><div><label>🏠 Rumah</label><input id="budgetHouse" type="number" min="0"></div>
+<div><label>👨‍👩‍👧 Keluarga</label><input id="budgetFamily" type="number" min="0"></div><div><label>📦 Lain-lain</label><input id="budgetOther" type="number" min="0"></div>
+</div><button class="primary" onclick="saveCategoryBudgets()">🎯 Simpan Bajet Kategori</button></div>
+</div>
+
+<div id="page2" class="page">
+<div class="summary"><div class="summary-box orange"><small>Hari Ini</small><strong id="dailyTotal">RM0.00</strong></div><div class="summary-box red-text"><small>Bulan Ini</small><strong id="monthlyTotal">RM0.00</strong></div></div>
+<div class="card"><h2>🛒 Tambah Belanja</h2><label>Tarikh</label><input id="expenseDate" type="date"><label>Kategori</label>
+<select id="expenseCategory">
+<option value="breakfast">🍳 Makan Pagi</option><option value="lunch">🍛 Makan Tengahari</option><option value="dinner">🍽️ Makan Malam</option><option value="drink">☕ Minum</option><option value="shop">🛒 Kedai / Barang</option><option value="petrol">⛽ Petrol</option><option value="parking">🅿️ Parking / Tol</option><option value="house">🏠 Rumah</option><option value="family">👨‍👩‍👧 Keluarga</option><option value="other">📦 Lain-lain</option>
+</select><label>Nama / Catatan</label><input id="expenseName" type="text" placeholder="Contoh: Nasi + air"><label>Jumlah (RM)</label><input id="expenseAmount" type="number" min="0" step=".01"><button class="primary" onclick="addExpense()">➕ Tambah Belanja</button></div>
+<div class="card"><h2>📋 Senarai Belanja</h2><div id="expenseList"></div></div>
+</div>
+
+<div id="page3" class="page">
+<div class="card"><h2>📈 Laporan Bulanan</h2><label>Pilih Bulan</label><input id="reportMonth" type="month" onchange="renderReport()"></div>
+<div class="summary">
+<div class="summary-box blue"><small>💰 Gaji</small><strong id="reportSalary">RM0.00</strong></div><div class="summary-box red-text"><small>📌 Komitmen</small><strong id="reportCommitment">RM0.00</strong></div>
+<div class="summary-box orange"><small>🛒 Belanja</small><strong id="reportExpense">RM0.00</strong></div><div class="summary-box green-text"><small>💵 Baki</small><strong id="reportBalance">RM0.00</strong></div>
+</div>
+<div class="card"><h2>📊 Penggunaan Gaji</h2><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px"><span>Komitmen + Belanja</span><strong id="usagePercent">0%</strong></div><div class="progress"><div id="usageBar" class="progress-bar"></div></div><div id="reportAlert"></div></div>
+<div class="card"><h2>📊 Belanja Mengikut Kategori</h2><div id="categoryReport"></div></div>
+<div class="card"><h2>📊 Grafik Belanja</h2><div id="chart" class="chart"></div></div>
+<div class="card"><h2>📅 Ringkasan Harian</h2><div id="dailyReport"></div></div>
+<div class="card"><h2>📥 Data</h2><button class="primary green" onclick="exportCSV()">📥 Export Belanja CSV</button><button class="primary gray" onclick="loadSampleData()">🧪 Isi Contoh Data</button></div>
+<div class="card"><h2>⚠️ Reset</h2><p style="font-size:12px;color:#64748b">Padam semua data bajet dan belanja.</p><button class="primary red" onclick="resetAll()">🗑️ Padam Semua Data</button></div>
+</div>
+
+<div class="footer">Pengurus Bajet Saya • Data disimpan dalam peranti/browser</div>
+</div>
+
+<div id="editModal" class="modal"><div class="modal-box"><h2>✏️ Edit Belanja</h2><label>Tarikh</label><input id="editDate" type="date"><label>Kategori</label><select id="editCategory"></select><label>Nama</label><input id="editName" type="text"><label>Jumlah</label><input id="editAmount" type="number" min="0" step=".01"><button class="primary" onclick="saveEdit()">💾 Simpan Perubahan</button><button class="close" onclick="closeEdit()">Tutup</button></div></div>
+
+<script>
+const categories={
+breakfast:{name:"🍳 Makan Pagi",budget:"budgetBreakfast"},lunch:{name:"🍛 Makan Tengahari",budget:"budgetLunch"},dinner:{name:"🍽️ Makan Malam",budget:"budgetDinner"},drink:{name:"☕ Minum",budget:"budgetDrink"},shop:{name:"🛒 Kedai / Barang",budget:"budgetShop"},petrol:{name:"⛽ Petrol",budget:"budgetPetrol"},parking:{name:"🅿️ Parking / Tol",budget:"budgetParking"},house:{name:"🏠 Rumah",budget:"budgetHouse"},family:{name:"👨‍👩‍👧 Keluarga",budget:"budgetFamily"},other:{name:"📦 Lain-lain",budget:"budgetOther"}};
+let expenses=JSON.parse(localStorage.getItem("budgetExpenses")||"[]");
+let budgetData=JSON.parse(localStorage.getItem("budgetData")||"{}");
+let categoryBudgets=JSON.parse(localStorage.getItem("categoryBudgets")||"{}");
+let editingId=null;
+
+function money(v){return "RM"+Number(v||0).toLocaleString("ms-MY",{minimumFractionDigits:2,maximumFractionDigits:2})}
+function today(){let d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function currentMonth(){return today().slice(0,7)}
+function val(id){return Number(document.getElementById(id).value||0)}
+function showPage(p){document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));document.getElementById("page"+p).classList.add("active");document.querySelectorAll(".nav button").forEach(x=>x.classList.remove("active"));document.getElementById("nav"+p).classList.add("active");if(p===2)renderExpenses();if(p===3)renderReport()}
+function commitment(){return val("car")+val("water")+val("electric")+val("phone")+val("wifi")+val("loan")+val("otherCommit")}
+function calculate(){let salary=val("salary"),commit=commitment(),m=currentMonth(),ex=expenses.filter(e=>e.date.startsWith(m)).reduce((s,e)=>s+Number(e.amount),0);document.getElementById("afterCommit").textContent=money(salary-commit);document.getElementById("topSalary").textContent=money(salary);document.getElementById("topCommitment").textContent=money(commit);document.getElementById("topExpenses").textContent=money(ex);document.getElementById("topBalance").textContent=money(salary-commit-ex);document.getElementById("monthlyTotal").textContent=money(ex);updateDailyTotal()}
+function saveBudget(){budgetData={salary:val("salary"),car:val("car"),water:val("water"),electric:val("electric"),phone:val("phone"),wifi:val("wifi"),loan:val("loan"),otherCommit:val("otherCommit")};localStorage.setItem("budgetData",JSON.stringify(budgetData));calculate();alert("✅ Bajet berjaya disimpan!")}
+function saveCategoryBudgets(){Object.keys(categories).forEach(k=>categoryBudgets[k]=Number(document.getElementById(categories[k].budget).value||0));localStorage.setItem("categoryBudgets",JSON.stringify(categoryBudgets));alert("🎯 Bajet kategori disimpan!");renderReport()}
+function saveExpenses(){localStorage.setItem("budgetExpenses",JSON.stringify(expenses))}
+function addExpense(){let date=document.getElementById("expenseDate").value,cat=document.getElementById("expenseCategory").value,name=document.getElementById("expenseName").value.trim(),amount=Number(document.getElementById("expenseAmount").value);if(!date||!name||amount<=0){alert("⚠️ Sila lengkapkan tarikh, nama dan jumlah.");return}expenses.push({id:Date.now(),date,category:cat,name,amount});saveExpenses();document.getElementById("expenseName").value="";document.getElementById("expenseAmount").value="";renderExpenses();calculate();renderReport();alert("✅ Belanja berjaya ditambah!")}
+function updateDailyTotal(){let t=expenses.filter(e=>e.date===today()).reduce((s,e)=>s+Number(e.amount),0);document.getElementById("dailyTotal").textContent=money(t)}
+function formatDate(d){if(!d)return"-";let p=d.split("-");return p[2]+"/"+p[1]+"/"+p[0]}
+function escapeHTML(t){return String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;")}
+function renderExpenses(){let list=document.getElementById("expenseList"),m=currentMonth(),f=expenses.filter(e=>e.date.startsWith(m)).sort((a,b)=>b.date.localeCompare(a.date));if(!f.length){list.innerHTML='<div class="empty">📭 Tiada belanja untuk bulan ini.</div>';updateDailyTotal();return}list.innerHTML=f.map(e=>`<div class="expense"><div class="expense-top"><div><div class="expense-name">${escapeHTML(e.name)}</div><div class="expense-date">${formatDate(e.date)} • ${categories[e.category]?.name||"📦 Lain-lain"}</div></div><div class="expense-amount">${money(e.amount)}</div></div><div class="expense-actions"><button class="edit-btn" onclick="editExpense(${e.id})">✏️ Edit</button><button class="delete-btn" onclick="deleteExpense(${e.id})">🗑️ Padam</button></div></div>`).join("");updateDailyTotal()}
+function deleteExpense(id){let x=expenses.find(e=>e.id===id);if(!x||!confirm("Padam belanja "+money(x.amount)+"?"))return;expenses=expenses.filter(e=>e.id!==id);saveExpenses();renderExpenses();calculate();renderReport()}
+function editExpense(id){let x=expenses.find(e=>e.id===id);if(!x)return;editingId=id;document.getElementById("editDate").value=x.date;document.getElementById("editCategory").value=x.category;document.getElementById("editName").value=x.name;document.getElementById("editAmount").value=x.amount;document.getElementById("editModal").classList.add("show")}
+function closeEdit(){document.getElementById("editModal").classList.remove("show");editingId=null}
+function saveEdit(){let x=expenses.find(e=>e.id===editingId);if(!x)return;let date=document.getElementById("editDate").value,cat=document.getElementById("editCategory").value,name=document.getElementById("editName").value.trim(),amount=Number(document.getElementById("editAmount").value);if(!date||!name||amount<=0){alert("⚠️ Maklumat tidak lengkap.");return}Object.assign(x,{date,category:cat,name,amount});saveExpenses();closeEdit();renderExpenses();calculate();renderReport();alert("✅ Perubahan disimpan!")}
+function renderReport(){let month=document.getElementById("reportMonth").value||currentMonth();document.getElementById("reportMonth").value=month;let salary=Number(budgetData.salary||0),commit=Number(budgetData.car||0)+Number(budgetData.water||0)+Number(budgetData.electric||0)+Number(budgetData.phone||0)+Number(budgetData.wifi||0)+Number(budgetData.loan||0)+Number(budgetData.otherCommit||0),me=expenses.filter(e=>e.date.startsWith(month)),total=me.reduce((s,e)=>s+Number(e.amount),0),bal=salary-commit-total,usage=salary>0?((commit+total)/salary)*100:0;document.getElementById("reportSalary").textContent=money(salary);document.getElementById("reportCommitment").textContent=money(commit);document.getElementById("reportExpense").textContent=money(total);document.getElementById("reportBalance").textContent=money(bal);document.getElementById("usagePercent").textContent=Math.round(usage)+"%";document.getElementById("usageBar").style.width=Math.min(100,Math.max(0,usage))+"%";document.getElementById("reportAlert").innerHTML=salary<=0?'<div class="alert warning">⚠️ Sila simpan gaji dahulu.</div>':bal<0?`<div class="alert danger">🚨 Bajet terlebih ${money(Math.abs(bal))}.</div>`:usage>=80?`<div class="alert warning">⚠️ Anda sudah menggunakan ${Math.round(usage)}% daripada gaji.</div>`:'<div class="alert success">✅ Bajet masih terkawal.</div>';renderCategoryReport(me);renderChart(me);renderDailyReport(me)}
+function renderCategoryReport(me){let t={};Object.keys(categories).forEach(k=>t[k]=0);me.forEach(e=>{if(t[e.category]!==undefined)t[e.category]+=Number(e.amount)});let h=Object.keys(categories).filter(k=>t[k]>0||Number(categoryBudgets[k]||0)>0).map(k=>{let total=t[k],b=Number(categoryBudgets[k]||0),p=b>0?total/b*100:0,c=p>=100?"danger":p>=80?"warning":"";return `<div class="budget-item"><div class="budget-head"><span>${categories[k].name}</span><span>${money(total)}${b?" / "+money(b):""}</span></div>${b?`<div class="budget-bar"><div class="budget-fill ${c}" style="width:${Math.min(p,100)}%"></div></div>`:""}</div>`}).join("");document.getElementById("categoryReport").innerHTML=h||'<div class="empty">📭 Belum ada perbelanjaan.</div>'}
+function renderChart(me){let d={};me.forEach(e=>d[e.date]=(d[e.date]||0)+Number(e.amount));let dates=Object.keys(d).sort(),max=Math.max(...dates.map(x=>d[x]),1),c=document.getElementById("chart");c.innerHTML=dates.length?dates.map(x=>`<div class="chart-item"><div class="chart-value">${money(d[x])}</div><div class="chart-bar" style="height:${Math.max(3,d[x]/max*170)}px"></div><div class="chart-label">${x.slice(8)}</div></div>`).join(""):'<div class="empty">📊 Tiada data grafik.</div>'}
+function renderDailyReport(me){let d={};me.forEach(e=>d[e.date]=(d[e.date]||0)+Number(e.amount));let dates=Object.keys(d).sort().reverse();document.getElementById("dailyReport").innerHTML=dates.length?dates.map(x=>`<div class="category-row"><div class="category-left">📅 ${formatDate(x)}</div><div class="category-total">${money(d[x])}</div></div>`).join(""):'<div class="empty">📭 Tiada rekod.</div>'}
+function exportCSV(){let m=document.getElementById("reportMonth").value||currentMonth(),data=expenses.filter(e=>e.date.startsWith(m));if(!data.length){alert("📭 Tiada data.");return}let csv="Tarikh,Kategori,Nama,Jumlah RM\n"+data.map(e=>`"${e.date}","${categories[e.category]?.name||"Lain-lain"}","${String(e.name).replace(/"/g,'""')}","${e.amount}"`).join("\n"),a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));a.download="belanja-"+m+".csv";a.click();URL.revokeObjectURL(a.href)}
+function loadSampleData(){if(!confirm("Masukkan contoh data?"))return;expenses.push({id:Date.now()+1,date:today(),category:"breakfast",name:"Nasi + Kopi",amount:8},{id:Date.now()+2,date:today(),category:"petrol",name:"Minyak",amount:20},{id:Date.now()+3,date:today(),category:"shop",name:"Barang kedai",amount:15});saveExpenses();renderExpenses();calculate();renderReport();alert("🧪 Contoh data dimasukkan.")}
+function resetAll(){if(!confirm("⚠️ Semua data akan dipadam. Teruskan?"))return;localStorage.removeItem("budgetExpenses");localStorage.removeItem("budgetData");localStorage.removeItem("categoryBudgets");location.reload()}
+function loadData(){Object.keys(budgetData).forEach(k=>{if(document.getElementById(k))document.getElementById(k).value=budgetData[k]||""});Object.keys(categories).forEach(k=>{let id=categories[k].budget;if(document.getElementById(id))document.getElementById(id).value=categoryBudgets[k]||""});document.getElementById("expenseDate").value=today();document.getElementById("reportMonth").value=currentMonth();calculate();renderExpenses();renderReport()}
+Object.keys(categories).forEach(k=>{let o=document.createElement("option");o.value=k;o.textContent=categories[k].name;document.getElementById("editCategory").appendChild(o)})
+let deferredPrompt=null;window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredPrompt=e;document.getElementById("installBar").style.display="block"});document.getElementById("installBtn").onclick=async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();deferredPrompt=null;document.getElementById("installBar").style.display="none"};
+if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("service-worker.js").catch(()=>{}));
+document.addEventListener("DOMContentLoaded",loadData);
+</script>
+</body>
+</html>
